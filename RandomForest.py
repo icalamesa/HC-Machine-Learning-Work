@@ -1,12 +1,6 @@
 import pandas as pd
 import numpy as np
-import sklearn
-from sklearn import tree
-from sklearn.model_selection import cross_val_score
-from sklearn.datasets import make_blobs
 from sklearn.ensemble import RandomForestClassifier
-from sklearn.ensemble import ExtraTreesClassifier
-from sklearn.tree import DecisionTreeClassifier
 
 
 df=pd.read_csv('data.csv')
