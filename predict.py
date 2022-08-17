@@ -7,6 +7,7 @@ from sklearn.ensemble import RandomForestRegressor
 from sklearn.model_selection import train_test_split 
 from sklearn.preprocessing import LabelEncoder
 from sklearn.metrics import mean_squared_error  
+import sklearn.utils
 
 path = './insurance.csv' 
 df = pd.read_csv(path)  
@@ -16,13 +17,20 @@ df = pd.read_csv(path)
 df = pd.get_dummies(df, columns=['sex','smoker','region'])
 
 ### END ENCODING BLOCK###
-
+df = sklearn.utils.shuffle(df)
 print(df.head())
 
 reg = LinearRegression(fit_intercept=True)
-X = df.to_numpy()[:,:5]
-y = df.to_numpy()[:,6]
+X = df.to_numpy()
+X = np.delete(X, 3, 1)
+y = df.to_numpy()[:,3]
 print(X)
+print(y)
+
+j = 0
+for (columnName, columnData) in df.iteritems():
+    print(f'{j} and column Name : ', columnName)
+    j += 1
 
 # Split data into the training and validation sets
 X_train, X_val, y_train, y_val = train_test_split(X, y, test_size=0.2, random_state=5)
@@ -64,8 +72,9 @@ for key in {'age', 'bmi', 'children'}:
 
 print("\nManaging second row of subplots(predicted values)...")
 print(y_pred_train)
-axes[1,0].scatter(X[:,0], np.append(y_pred_train, y_pred_val), color="black")
-
+axes[1,0].scatter(X[:,2], np.append(y_pred_train, y_pred_val), color="black") #age
+axes[1,1].scatter(X[:,0], np.append(y_pred_train, y_pred_val), color="black") #age
+axes[1,2].scatter(X[:,1], np.append(y_pred_train, y_pred_val), color="black") #bmi
 
 plt.show()
 
