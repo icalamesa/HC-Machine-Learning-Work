@@ -1,6 +1,17 @@
 import pandas as pd
 import numpy as np
+import sklearn
+from sklearn import tree
+from sklearn.model_selection import cross_val_score
+from sklearn.datasets import make_blobs
 from sklearn.ensemble import RandomForestClassifier
+from sklearn.ensemble import ExtraTreesClassifier
+from sklearn.tree import DecisionTreeClassifier
+from sklearn.model_selection import train_test_split
+from sklearn import metrics
+import seaborn as sns; sns.set()
+import matplotlib.pyplot as plt
+from sklearn.metrics import confusion_matrix
 
 
 df=pd.read_csv('data.csv')
@@ -17,24 +28,27 @@ df.loc[df['sex']=='female','sex'],df.loc[df['sex']=='male','sex']=1,0
 df.loc[df['region']=='southwest','region'],df.loc[df['region']=='southeast','region'],df.loc[df['region']=='northwest','region'],df.loc[df['region']=='northeast','region']=1,2,3,4
 df.loc[df['smoker']=='yes','smoker'],df.loc[df['smoker']=='no','smoker']=1,0
 
-# Spliting up a small sample of test data
-df_test = df.tail(5)
-df.drop(df.tail(5).index, inplace=True)
+
 label=df['charges'] # labels
-
-
 df=df.drop(['charges'], axis=1) # Droping labels from traindata
 
 feature=[column for column in df]
 X = np.column_stack([list(df[col]) for col in feature ]) # Creating the feautre matrix for train_data
 Y=label
 
-X_test=np.column_stack([list(df_test[col]) for col in feature ]) # Creating the feautre matrix for testing data
+X_train,X_test,Y_train,Y_test=train_test_split(X,Y,test_size=0.8,random_state=42)
 
-model = RandomForestClassifier(n_estimators=100, random_state=1) # creating the model
-model.fit(X,Y) # Fitting the model
-print(X_test)
-print(model.predict(X_test[0].reshape(1,-1)))
+model = RandomForestClassifier(n_estimators=200, random_state=42) # creating the model
+model.fit(X_train,Y_train) # Fitting the model
+ypred = model.predict(X_test)
+print(metrics.classification_report(ypred, Y_test))
+
+# Plotting the heat map
+mat = confusion_matrix(Y_test, ypred)
+sns.heatmap(mat.T, square=True, annot=True, fmt='d', cbar=False)
+plt.xlabel('true label')
+plt.ylabel('predicted label')
+plt.show()
 
 
-# Tomas Nordström
+
