@@ -27,8 +27,8 @@ df.loc[df['sex']=='female','sex'],df.loc[df['sex']=='male','sex']=1,0
 df.loc[df['region']=='southwest','region'],df.loc[df['region']=='southeast','region'],df.loc[df['region']=='northwest','region'],df.loc[df['region']=='northeast','region']=1,2,3,4
 df.loc[df['smoker']=='yes','smoker'],df.loc[df['smoker']=='no','smoker']=1,0
 
-df=pd.concat([df,df,df,df,df,df,df]) # Increasing the data set
-df=df.reset_index(drop=True)
+#df=pd.concat([df,df,df,df,df,df,df]) # Increasing the data set
+#df=df.reset_index(drop=True)
 
 label=df['charges'] # labels
 df=df.drop(['charges'], axis=1) # Droping labels from traindata
