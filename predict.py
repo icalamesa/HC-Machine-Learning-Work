@@ -18,6 +18,7 @@ df = pd.get_dummies(df, columns=['sex','smoker','region'])
 
 ### END ENCODING BLOCK###
 df = sklearn.utils.shuffle(df)
+
 print(df.head())
 
 reg = LinearRegression(fit_intercept=True)
@@ -42,9 +43,6 @@ reg.fit(X_train, y_train)
 y_pred_train = reg.predict(X_train)
 y_pred_val   = reg.predict(X_val)
 
-#print(y_pred_train[:10])
-#print(y_pred_val[:10])
-
 err_train = mean_squared_error(y_train, y_pred_train)  
 err_val = mean_squared_error(y_val, y_pred_val)
 
@@ -52,10 +50,11 @@ print(f"Training error is : {err_train:.2f}")
 print(f"Validation error is : {err_val:.2f}")
 
 fig, axes = plt.subplots(2, 3)
-
+colorarray = ['blue', 'yellow','green']
 i = 0
 print("\nManaging first row of subplots...")
 for key in {'age', 'bmi', 'children'}:
+
     print(f"i index is {i} and the column key is {key}.")
     data = df[key].to_numpy().reshape(-1,1)
     target = df['charges'].to_numpy()
@@ -65,8 +64,17 @@ for key in {'age', 'bmi', 'children'}:
     axes[0, i].set_xlabel(key)    # Set x-axis label
     axes[0, i].set_ylabel("charges")  # Set y-axis label
     #axes[0, i].legend(loc='upper left')  # Set location of the legend to show in upper left corner
-    axes[0, i].scatter(data, target)
-    #axes[i].plot(X_train.append())
+    colors = ['yellow' if a == 1 else 'purple' for a in df["smoker_yes"] ]
+    sizes = [ a**1.1 for a in df["bmi"]]
+    axes[0, i].scatter(data, target, edgecolor=colors, c='none', s = sizes)
+    if (key == 'bmi'):
+        plt.figure(200)
+        colors = ['yellow' if a == 1 else 'purple' for a in df["smoker_yes"] ]
+        sizes = [ a**1.2 for a in df["bmi"]]
+        plt.scatter(data, target, edgecolor=colors, c='none', s = sizes)
+        plt.xlabel('age')
+        plt.ylabel('charges')
+
 
     i+=1
 
